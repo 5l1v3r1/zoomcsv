@@ -1,12 +1,12 @@
 
-<!-- Time-stamp: <2020-04-19 22:47:32>                                      -->
-<!-- Purpose   :                                                            -->
+<!-- Time-stamp: <2020-04-20 17:16:34>                                      -->
+<!-- Purpose   : zoompart.py readme                                         -->
 <!-- Author    : Robbie Morrison <robbie.morrison@posteo.de>                -->
-<!-- Project   : zoomcsv.py                                                 -->
+<!-- Project   : zoomcsv                                                    -->
 <!-- Commenced : 19-Apr-2020                                                -->
 <!-- Status    : work-in-progress                                           -->
 <!-- Editor    : ReText 7.0.4 / Ubuntu 19.04                                -->
-<!-- Keywords  :                                                            -->
+<!-- Keywords  : zoom                                                       -->
 <!-- Notes     :                                                            -->
 
 # zoompart.py
