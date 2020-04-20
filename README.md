@@ -1,5 +1,5 @@
 
-<!-- Time-stamp: <2020-04-20 17:16:34>                                      -->
+<!-- Time-stamp: <2020-04-20 17:20:31>                                      -->
 <!-- Purpose   : zoompart.py readme                                         -->
 <!-- Author    : Robbie Morrison <robbie.morrison@posteo.de>                -->
 <!-- Project   : zoomcsv                                                    -->
@@ -24,7 +24,6 @@ This one file utility takes the participant CVS file, processes it a little, and
 A typical call might comprise:
 
 ```
-
 $ zoompart.py \
   --verbose \
   --dat-file \
@@ -32,7 +31,6 @@ $ zoompart.py \
   --cutoff=20 \
   --title="Test plot" \
   participants_123456789.csv
-
 ```
 
 To yield to following plot:
@@ -90,95 +88,5 @@ The script is reasonably mature, although the following caveats apply:
 <br>
 
 &#9634;
-
-<!-- CSS style settings -->
-
-<style>
-body
-{
-    font-family       : DejaVu Sans;         /* open font, see wikipedia */
-    font-size         : 90%;
-    line-height       : initial;
-    margin-left       : +10%;
-    margin-right      : +12%;
-    margin-top        : +10%;                /* page concept does not apply */
-    margin-bottom     : +15%;
-}
-a
-{
-    color             : blue;
-    text-decoration   : none;                /* suppress underlining*/
-}
-h2
-{
-    font-size         : 110%;
-    font-style        : initial;
-    color             : initial;
-    padding-top       : 1.0ex;
-    padding-bottom    : 0.0ex;
-}
-h3
-{
-    font-size         : 100%;
-    font-style        : initial;
-    color             : initial;
-    padding-top       : 1.0ex;
-    padding-bottom    : 0.0ex;
-}
-ul, ol
-{
-    margin-top        : -0.8ex;
-}
-li
-{
-    padding-top       : +0.8ex;
-}
-table
-{
-    font-family       : DejaVu Sans;         /* open font, see wikipedia */
-    font-size         : 80%;
-    padding-top       : 2.0ex;
-    padding-bottom    : 0.7ex;
-    margin-left       : +00%;
-    margin-right      : -15%;
-    margin-bottom     : 2.0ex;
-    border-bottom     : 1px solid gray;
-}
-th
-{
-    text-align        : left;
-    vertical-align    : top;
-    padding-left      : 0.5em;
-    padding-right     : 1.0em;
-    background-color  : lightgrey;
-}
-td
-{
-    vertical-align    : top;
-    padding-left      : 0.5ex;
-    padding-right     : 2.0ex;
-}
-code
-{
-    font-family       : DejaVu Sans Mono;
-    background-color  : #EEE9BF;
-    padding-left      : 0.3em;
-    padding-right     : 0.3em;
-}
-pre
-{
-    font-family       : DejaVu Sans Mono;
-    background-color  : #EEE9BF;
-    overflow          : auto;
-    margin-left       : +2.0em;
-    padding-left      : +0.5em;
- }
-hr
-{
-    border            : 1.0mm solid darkgray;    /* not height */
-    margin-top        : 5.0ex;
-    margin-bottom     : initial;
-}
-</style>
 
 <!-- end of file -->
