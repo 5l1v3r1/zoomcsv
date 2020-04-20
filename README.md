@@ -1,5 +1,5 @@
 
-<!-- Time-stamp: <2020-04-20 17:20:31>                                      -->
+<!-- Time-stamp: <2020-04-20 17:34:10>                                      -->
 <!-- Purpose   : zoompart.py readme                                         -->
 <!-- Author    : Robbie Morrison <robbie.morrison@posteo.de>                -->
 <!-- Project   : zoomcsv                                                    -->
@@ -15,10 +15,10 @@ Plot Zoom video‑meeting participant duration data.
 
 This one file utility takes the participant CVS file, processes it a little, and produces a bar graph showing the participation rates.  In particular:
 
-- the utility deduplicates multiple sessions by the same user to produce a single session &mdash; these multiple sessions will overlap if users inadvertently run simultaneous instances of Zoom and these overlaps are duly removed
-- a session is defined by its first join and last leave timestamps &mdash; so any holes present will remain unaccounted
-- deduplication examines email addresses by default or optionally user names &mdash; user names often alter between sessions and are therefore less reliable in this regard
-- the utility tallies the number of sessions above a certain user‑defined threshold to report the number of engaged users
+- the utility deduplicates multiple sessions by the same user to produce a single session &mdash; multiple sessions will overlap if users inadvertently run simultaneous instances of Zoom and these overlaps are duly removed
+- a session is defined by its first join and last leave timestamps &mdash; so that any holes present will remain unaccounted
+- deduplication examines email addresses by default or optionally user names &mdash; users often enter slightly different names between sessions and are therefore less reliable in this regard
+- the utility tallies the number of sessions above a certain user‑defined time threshold to report the number of engaged users
 - the widely disliked "Attentiveness Score" metric is no longer present in the participant CVS file by default and is therefore not considered
 
 A typical call might comprise:
