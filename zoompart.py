@@ -1,5 +1,5 @@
-#! /home/robbie/software/anaconda3/bin/python
 #! /usr/bin/python3
+#! /home/robbie/software/anaconda3/bin/python
 
 #  Purpose   : plot bar graph from Zoom video-meeting participant files
 #  Author    : Robbie Morrison <robbie.morrison@posteo.de> / GitHub @robbiemorrison
