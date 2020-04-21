@@ -1,5 +1,5 @@
 
-<!-- Time-stamp: <2020-04-20 17:34:10>                                      -->
+<!-- Time-stamp: <2020-04-21 09:42:24>                                      -->
 <!-- Purpose   : zoompart.py readme                                         -->
 <!-- Author    : Robbie Morrison <robbie.morrison@posteo.de>                -->
 <!-- Project   : zoomcsv                                                    -->
@@ -13,13 +13,15 @@
 
 Plot Zoom video‑meeting participant duration data.
 
-This one file utility takes the participant CVS file, processes it a little, and produces a bar graph showing the participation rates.  In particular:
+### Getting started
+
+This one file utility takes the participant CSV file, processes it a little, and produces a bar graph showing the participation rates.  In particular:
 
 - the utility deduplicates multiple sessions by the same user to produce a single session &mdash; multiple sessions will overlap if users inadvertently run simultaneous instances of Zoom and these overlaps are duly removed
 - a session is defined by its first join and last leave timestamps &mdash; so that any holes present will remain unaccounted
 - deduplication examines email addresses by default or optionally user names &mdash; users often enter slightly different names between sessions and are therefore less reliable in this regard
 - the utility tallies the number of sessions above a certain user‑defined time threshold to report the number of engaged users
-- the widely disliked "Attentiveness Score" metric is no longer present in the participant CVS file by default and is therefore not considered
+- the widely disliked "Attentiveness Score" metric is no longer present in the participant CSV file by default and is therefore not considered
 
 A typical call might comprise:
 
@@ -39,19 +41,28 @@ To yield to following plot:
 
 No personal data is embedded in either the produced SVG or DAT files.  The DAT file contains only the raw numbers used to create the bar graph.
 
+There is not real need to clone this repository, just download or copy‑paste the contents of `zoompart.py` to a local file, set the [execute permission](https://en.wikipedia.org/wiki/Chmod), and run that:
+
+```
+$ chmod u+x zoompart.py
+$ ./zoompart.py --help
+```
+
 The various function definitions in the utility could be pulled out and used to drive an interactive [jupyter notebooks](https://en.wikipedia.org/wiki/Project_Jupyter#Jupyter_Notebook) session instead.
 
 As of April&nbsp;2020, Zoom names the participant file using the following convention:
 
 - `participants_<meeting-ID-without-dashes>.csv`
 
-## Options
+The software license is [ISC](https://spdx.org/licenses/ISC.html), regarded as equivalent to the [MIT](https://spdx.org/licenses/MIT.html) permissive license but with simpler wording.
+
+### Options
 
 The following options are provided:
 
-| long option          | short | argument | comment                                  |
+| long                 | short | argument | comment                                  |
 |----------------------|------:|---------:|------------------------------------------|
-| `--version`          |  `-V` |  &mdash; | show utility version number and exit     |
+| `--version`          |  `-V` |  &mdash; | show utility version string and exit     |
 | `--help`             |  `-h` |  &mdash; | show  help message and exit              |
 | `--title`            |  `-t` |   string | set plot title                           |
 | `--numbered-title`   |  `-n` |  &#8469; | use custom numbered plot title           |
@@ -62,14 +73,17 @@ The following options are provided:
 | `--no-plot`          |  `-P` |  &mdash; | omit plot                                |
 | `--save-plot`        |  `-S` |  &mdash; | save plot automatically                  |
 | `--truncate`         |  `-T` |  &#8469; | truncate input data for testing purposes |
-| `--verbose`          |  `-v` |  &mdash; | show additional information              |
-| `--show-df`          |  `-D` |  &mdash; | show loaded dataframes                   |
+| `--verbose`          |  `-v` |  &mdash; | print additional information             |
+| `--show-df`          |  `-D` |  &mdash; | print loaded dataframes                  |
+|                      |       |          |                                          |
 
 &#8469; indicates {0, 1, 2, ...}.
 
+The `--nominal-duration` option draws a horizontal dotted line annotated "nominal duration".  It is useful because sometimes participants continue to chat after the event proper has finished.
+
 Users can adjust some hardcoded values in the script to better suit their needs.  See the comments in the code for further details.
 
-## Requirements
+### Requirements
 
 The utility requires the following python dependencies:
 
@@ -77,7 +91,7 @@ The utility requires the following python dependencies:
 - pandas
 - matplotlib
 
-## Status and caveats
+### Status and caveats
 
 The script is reasonably mature, although the following caveats apply:
 
