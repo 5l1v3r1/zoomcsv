@@ -316,9 +316,9 @@ def getStub():                                    # generate stub name for creat
     deport()
     script = os.path.basename(sys.argv[0])
     stub_1 = os.path.splitext(script)[0]          # based on script name
-    stub_1 = re.sub(' +', '-', plotTitle)         # based on title
-    stub_1 = stub_1.lower()                       # downcase
-    stub = stub_1                                 # control which 'stub' to use here
+    stub_2 = re.sub(' +', '-', plotTitle)         # based on plot title
+    stub_2 = stub_2.lower()                       # downcase
+    stub = stub_2                                 # control which 'stub' to use here
     deport("filename stub", stub)
     return stub
 
@@ -331,7 +331,7 @@ def writeDatFile(filename, data, sep):           # create DAT file
         if os.path.isfile(filename):
             os.chmod(filename, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP)      # set file permission to 0640
         fd = open(filename, 'w')
-        print(*data, sep = mysep, file = fd)
+        print(*data, sep=sep, file=fd)
         fd.close()
         os.chmod(filename, stat.S_IRUSR | stat.S_IRGRP)                         # set file permission to 0440
     except IOError:
@@ -348,7 +348,6 @@ def myexit(exitcode):                             # common point of exit
     deport("script", "complete")
     if exitcode == 0: deport("exit code", str(exitcode) + " (success)")
     else:             deport("exit code", str(exitcode) + " (failure)")
-#      if args.verbose or args.showdf: deport()
     report()
     sys.exit(exitcode)
 
