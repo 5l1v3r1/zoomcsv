@@ -1,5 +1,5 @@
 
-<!-- Time-stamp: <2020-04-21 09:42:24>                                      -->
+<!-- Time-stamp: <2020-04-21 09:45:08>                                      -->
 <!-- Purpose   : zoompart.py readme                                         -->
 <!-- Author    : Robbie Morrison <robbie.morrison@posteo.de>                -->
 <!-- Project   : zoomcsv                                                    -->
@@ -13,7 +13,7 @@
 
 Plot Zoom video‑meeting participant duration data.
 
-### Getting started
+### Overview
 
 This one file utility takes the participant CSV file, processes it a little, and produces a bar graph showing the participation rates.  In particular:
 
@@ -22,6 +22,8 @@ This one file utility takes the participant CSV file, processes it a little, and
 - deduplication examines email addresses by default or optionally user names &mdash; users often enter slightly different names between sessions and are therefore less reliable in this regard
 - the utility tallies the number of sessions above a certain user‑defined time threshold to report the number of engaged users
 - the widely disliked "Attentiveness Score" metric is no longer present in the participant CSV file by default and is therefore not considered
+
+### Getting started
 
 A typical call might comprise:
 
