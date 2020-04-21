@@ -1,5 +1,5 @@
 
-<!-- Time-stamp: <2020-04-21 09:45:08>                                      -->
+<!-- Time-stamp: <2020-04-21 09:46:56>                                      -->
 <!-- Purpose   : zoompart.py readme                                         -->
 <!-- Author    : Robbie Morrison <robbie.morrison@posteo.de>                -->
 <!-- Project   : zoomcsv                                                    -->
@@ -55,6 +55,8 @@ The various function definitions in the utility could be pulled out and used to 
 As of April&nbsp;2020, Zoom names the participant file using the following convention:
 
 - `participants_<meeting-ID-without-dashes>.csv`
+
+### Software license
 
 The software license is [ISC](https://spdx.org/licenses/ISC.html), regarded as equivalent to the [MIT](https://spdx.org/licenses/MIT.html) permissive license but with simpler wording.
 
