@@ -182,6 +182,15 @@ def scriptVer():                                  # print script version
     script = os.path.basename(sys.argv[0])
     report(script + " version", versionStr)
 
+def setPandasWide():                              # allow full terminal output
+    termrows, termcols = os.popen('stty size', 'r').read().split()
+    termheight = int(termrows)
+    termwidth = int(termcols)
+    deport("stty rows x cols", '{0:d} x {1:d}'.format(termheight, termwidth))
+    pandas.set_option('display.width', termwidth) # default width is 80
+    pandaswidth = pandas.get_option('display.width')
+    deport("pandas reporting width", pandaswidth)
+
 def sayDf(df, stub, rows=5):                      # short report on given dataframe
     if not args.showdf:
         return
@@ -405,6 +414,11 @@ if args.showdf: deport("show dataframes", "on")
 if args.length: deport("truncate", "active")
 pythonVer()                                       # print python version
 report("target", csvTarget)
+
+# improve pandas terminal reporting
+
+if not sys.platform == 'win32':
+    setPandasWide()
 
 # process title
 
