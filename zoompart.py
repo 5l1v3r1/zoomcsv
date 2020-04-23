@@ -32,8 +32,13 @@
 #  user defined variables
 # --------------------------------------
 
-standinPlotTitle = "stand in title"                                   # used when no title is set on the command-line
+# hardcoded here
+
 numberedTitleFmt = "dummy workshop {0:02d} participation"             # used to create indexed title under option '--numbered-title'
+
+# can be overwritten by command-line options
+
+standinPlotTitle = "stand in title"                                   # used when no title is set on the command-line
 cutoffDefault = 20                                                    # durations below this threshold in minutes are excluded in some participant counts
 
 # --------------------------------------
@@ -50,7 +55,7 @@ import argparse                                   # argument parsing
 import enum                                       # enumeration support
 import os
 import re                                         # support for regular expressions
-import stat                                       # 'stat' results interpretation
+import stat                                       # 'stat' (file status) results interpretation
 import sys
 
 import pandas
@@ -110,19 +115,19 @@ def argIsNatural(value):
 
 parser = argparse.ArgumentParser(description=description, epilog=epilog, formatter_class=argparse.RawDescriptionHelpFormatter)
 
-parser.add_argument('-V', '--version',                              action='version',                    version='%(prog)s ' + ' : ' + versionStr)
-parser.add_argument('-t', '--title',            dest="title",       action='store',      required=False,                    help='plot title')
-parser.add_argument('-n', '--numbered-title',   dest="number",      action='store',      required=False, type=argIsNatural, help='use custom numbered plot title')
-parser.add_argument('-l', '--nominal-duration', dest="duration",    action='store',      required=False, type=argIsNatural, help='set nominal duration in minutes')
-parser.add_argument('-c', '--cutoff',           dest="cutoff",      action='store',      required=False, type=argIsNatural, help='set short session threshold in minutes')
-parser.add_argument('-N', '--dedup-name',       dest="usename",     action='store_true', required=False,                    help='deduplicate on name not email address')
-parser.add_argument('-d', '--dat-file',         dest="dat",         action='store_true', required=False,                    help='create or overwrite existing DAT file')
-parser.add_argument('-P', '--no-plot',          dest="noplot",      action='store_true', required=False,                    help='omit plot')
-parser.add_argument('-S', '--save-plot',        dest="saveplot",    action='store_true', required=False,                    help='save plot automatically')
-parser.add_argument('-T', '--truncate',         dest="length",      action='store',      required=False, type=argIsNatural, help='truncate input data for testing purposes')
-parser.add_argument('-v', '--verbose',          dest="verbose",     action='store_true', required=False,                    help='show additional information')
-parser.add_argument('-D', '--show-df',          dest="showdf",      action='store_true', required=False,                    help='show loaded dataframes')
-parser.add_argument('csv',                      type=str,           action="store",                                         help='participant CSV file')
+parser.add_argument('-V', '--version',                           action='version',                    version='%(prog)s ' + ' : ' + versionStr)
+parser.add_argument('-t', '--title',            dest="title",    action='store',      required=False,                    help='plot title')
+parser.add_argument('-n', '--numbered-title',   dest="number",   action='store',      required=False, type=argIsNatural, help='use custom numbered plot title')
+parser.add_argument('-l', '--nominal-duration', dest="duration", action='store',      required=False, type=argIsNatural, help='set nominal duration in minutes')
+parser.add_argument('-c', '--cutoff',           dest="cutoff",   action='store',      required=False, type=argIsNatural, help='set short session threshold in minutes')
+parser.add_argument('-N', '--dedup-name',       dest="usename",  action='store_true', required=False,                    help='deduplicate on name not email address')
+parser.add_argument('-d', '--dat-file',         dest="dat",      action='store_true', required=False,                    help='create or overwrite existing DAT file')
+parser.add_argument('-P', '--no-plot',          dest="noplot",   action='store_true', required=False,                    help='omit plot')
+parser.add_argument('-S', '--save-plot',        dest="saveplot", action='store_true', required=False,                    help='save plot automatically')
+parser.add_argument('-T', '--truncate',         dest="length",   action='store',      required=False, type=argIsNatural, help='truncate input data for testing purposes')
+parser.add_argument('-v', '--verbose',          dest="verbose",  action='store_true', required=False,                    help='show additional information')
+parser.add_argument('-D', '--show-df',          dest="showdf",   action='store_true', required=False,                    help='show loaded dataframes')
+parser.add_argument('csv',                      type=str,        action="store",                                         help='participant CSV file')
 
 args = parser.parse_args()
 
@@ -210,13 +215,13 @@ def checkFile(regular):                           # check 'regular' that is a re
 def readMeta(csvtarget):                          # read CSV metadata
     grab = 1
     df = pandas.read_csv(csvtarget, nrows=grab, parse_dates=['Start Time', 'End Time'])
-    newcols = { 'Meeting ID'           : 'MeetingID',
-                'Topic'                : 'Topic',
-                'Start Time'           : 'Start',
-                'End Time'             : 'Close',
-                "User Email"           : "HostEmail",
-                'Duration (Minutes)'   : 'Minutes',
-                'Participants'         : 'Count'}
+    newcols = { 'Meeting ID'         : 'MeetingID',
+                'Topic'              : 'Topic',
+                'Start Time'         : 'Start',
+                'End Time'           : 'Close',
+                "User Email"         : "HostEmail",
+                'Duration (Minutes)' : 'Minutes',
+                'Participants'       : 'Count'}
     df = df.rename(columns=newcols)
     return df
 
@@ -242,7 +247,9 @@ def sayMeta(df):
 
 def readCsv(csvtarget):                           # read 'csvtarget' into a dataframe and return same
     csvskip = 2                                   # skip first 2 lines describing the meeting
-    df = pandas.read_csv(csvtarget, header=csvskip, parse_dates=['Join Time', 'Leave Time'])
+    df = pandas.read_csv(csvtarget,
+                         header=csvskip,
+                         parse_dates=['Join Time', 'Leave Time'])
     newcols = { 'Name (Original Name)' : 'Name',
                 'User Email'           : 'Email',
                 'Join Time'            : 'Join',
@@ -275,6 +282,7 @@ def createSecondDf(df, mainkey):                  # create recipient dataframe a
 # iterating over dataframes is not good practice but it will do for now
 
 def stockSecondDf(df, df2, mainkey):                                  # load recipient dataframe and return same
+    # stocking code
     deport()
     deport("stocking loop")
     for index, row in df.iterrows():
@@ -296,7 +304,7 @@ def stockSecondDf(df, df2, mainkey):                                  # load rec
             df2.iat[rowindex2, colindex2leaf] = leaf                  # set new leaf time
         elif leaf > currentleaf:
             df2.iat[rowindex2, colindex2leaf] = leaf                  # ratchet up leaf time
-
+    # duration calculations
     deport()
     deport("duration loop")
     for index2, row2 in df2.iterrows():
@@ -336,16 +344,21 @@ def writeDatFile(filename, data, sep):           # create DAT file
     deport("creating DAT file")
     deport()
     deport("DAT file", filename)
+    if os.path.isfile(filename): xeport("writeDatFile", "action", "overwriting exiting file")
+    else:                        xeport("writeDatFile", "action", "creating new file")
+    # active code
     try:
-        if os.path.isfile(filename):
-            os.chmod(filename, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP)      # set file permission to 0640
+        userwritePerms = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP   # set file permission to 0640
+        readonlyPerms = stat.S_IRUSR | stat.S_IRGRP                   # set file permission to 0440
+        if os.path.isfile(filename):                                  # file may not exist at this juncture
+            os.chmod(filename, userwritePerms)
         fd = open(filename, 'w')
         print(*data, sep=sep, file=fd)
         fd.close()
-        os.chmod(filename, stat.S_IRUSR | stat.S_IRGRP)                         # set file permission to 0440
+        os.chmod(filename, readonlyPerms)
     except IOError:
-        deport("file open error", filename)
-        exitCode = ExitCode.datIssue.value                                      # update exit code
+        xeport("file open error", filename)
+        exitCode = ExitCode.datIssue.value                            # update exit code
 
 def mvSvgCall(localSvg):                          # useful reporting
     default = "Figure_1.svg"
@@ -418,7 +431,7 @@ report("target", csvTarget)
 # improve pandas terminal reporting
 
 if not sys.platform == 'win32':
-    setPandasWide()
+    setPandasWide()                               # possibly contains OS-specific code?
 
 # process title
 
