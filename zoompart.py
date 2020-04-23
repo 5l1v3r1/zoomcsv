@@ -341,9 +341,9 @@ def getStub():                                    # generate stub name for creat
 
 def writeDatFile(filename, data, sep):           # create DAT file
     deport()
-    deport("creating DAT file")
-    deport()
-    deport("DAT file", filename)
+    deport("writing DAT file")
+    report()
+    report("DAT file", filename)
     if os.path.isfile(filename): report("action", "overwriting exiting file")
     else:                        report("action", "creating new file")
     # active code
