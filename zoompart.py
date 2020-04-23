@@ -45,7 +45,7 @@ cutoffDefault = 20                                                    # duration
 #  version information
 # --------------------------------------
 
-versionStr = "0.4"                                                    # script version string
+versionStr = "0.5"                                                    # script version string
 
 # -------------------------------------
 #  modules
