@@ -344,8 +344,8 @@ def writeDatFile(filename, data, sep):           # create DAT file
     deport("creating DAT file")
     deport()
     deport("DAT file", filename)
-    if os.path.isfile(filename): xeport("writeDatFile", "action", "overwriting exiting file")
-    else:                        xeport("writeDatFile", "action", "creating new file")
+    if os.path.isfile(filename): report("action", "overwriting exiting file")
+    else:                        report("action", "creating new file")
     # active code
     try:
         userwritePerms = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP   # set file permission to 0640
@@ -357,7 +357,7 @@ def writeDatFile(filename, data, sep):           # create DAT file
         fd.close()
         os.chmod(filename, readonlyPerms)
     except IOError:
-        xeport("file open error", filename)
+        report("file open error", filename)
         exitCode = ExitCode.datIssue.value                            # update exit code
 
 def mvSvgCall(localSvg):                          # useful reporting
