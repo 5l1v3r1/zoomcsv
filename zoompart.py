@@ -29,14 +29,22 @@
 #  or in connection with the use or performance of this software.
 
 # --------------------------------------
+#  notes
+# --------------------------------------
+
+#  DateTimeRange
+#  https://pypi.org/project/DateTimeRange/
+#  import datetimerange
+
+# --------------------------------------
 #  user defined variables
 # --------------------------------------
 
-# hardcoded here
+# hardcoded here only
 
 numberedTitleFmt = "dummy workshop {0:02d} participation"             # used to create indexed title under option '--numbered-title'
 
-# can be overwritten by command-line options
+# hardcoded defaults here but can be overwritten by command-line options
 
 standinPlotTitle = "stand in title"                                   # used when no title is set on the command-line
 cutoffDefault = 20                                                    # durations below this threshold in minutes are excluded in some participant counts
@@ -45,7 +53,7 @@ cutoffDefault = 20                                                    # duration
 #  version information
 # --------------------------------------
 
-versionStr = "0.5"                                                    # script version string
+versionStr = "0.6"                                                    # script version string
 
 # -------------------------------------
 #  modules
@@ -84,28 +92,44 @@ description = "plot Zoom participant duration information"
 
 epilog = """
 
-The utility plots duration infomation from the participant CSV file produced at
+The utility plots duration information from the participant CSV file produced at
 the end of a Zoom session.
 
-Zoom is a proprietary video-conferencing application.  CSV indicates
-comma-separated values format.
+Zoom is a proprietary video-conferencing application.  CSV indicates a
+comma-separated values file.
 
 The resulting plot window can be either saved automatically using the
-'--save-plot' option or saved manually as a SVG or PNG file from the plot
-window.
+--save-plot option or saved manually as a SVG or PNG file from the plot
+window.  Automatic saving may not work on your system, in which case revert to
+saving by hand with your mouse.
 
 A hardcoded custom numbered title is activated under option --numbered-title:
   "{0}"
 The default plot title is:
   "{1}"
+You can and should override this default using option --title.
+
+Experience shows some participants will run multiple sessions, often with gaps
+and overlaps.  This is handled by default by deduplicating participants on their
+email addresses and accounting for these gaps and overlaps when calculating
+durations.  Two options override this default behavior.  Option --dedup-name
+deduplicates on name and --ignore-gaps identifies the first join and the last
+leave timestamps and utilizes the simple difference instead.
 
 The short sessions cutoff under option --cutoff excludes sessions shorter than
-the given threshold to provide an engaged participant count.
+the given threshold when calculating the engaged participant count.  The default
+value is {2} minutes.
 
 A DAT file contains the values used in the bar graph plot.  It does not contain
 personal information, nor will any plot export files.
 
-""".format(numberedTitleFmt, standinPlotTitle)
+The latest version of this file should be available on GitHub under:
+https://github.com/robbiemorrison/zoomcsv
+
+This script is open licensed under an ISC software license.  See code for
+details.
+
+""".format(numberedTitleFmt, standinPlotTitle, cutoffDefault)
 
 def argIsNatural(value):
     intvalue = int(value)
@@ -115,19 +139,20 @@ def argIsNatural(value):
 
 parser = argparse.ArgumentParser(description=description, epilog=epilog, formatter_class=argparse.RawDescriptionHelpFormatter)
 
-parser.add_argument('-V', '--version',                           action='version',                    version='%(prog)s ' + ' : ' + versionStr)
-parser.add_argument('-t', '--title',            dest="title",    action='store',      required=False,                    help='plot title')
-parser.add_argument('-n', '--numbered-title',   dest="number",   action='store',      required=False, type=argIsNatural, help='use custom numbered plot title')
-parser.add_argument('-l', '--nominal-duration', dest="duration", action='store',      required=False, type=argIsNatural, help='set nominal duration in minutes')
-parser.add_argument('-c', '--cutoff',           dest="cutoff",   action='store',      required=False, type=argIsNatural, help='set short session threshold in minutes')
-parser.add_argument('-N', '--dedup-name',       dest="usename",  action='store_true', required=False,                    help='deduplicate on name not email address')
-parser.add_argument('-d', '--dat-file',         dest="dat",      action='store_true', required=False,                    help='create or overwrite existing DAT file')
-parser.add_argument('-P', '--no-plot',          dest="noplot",   action='store_true', required=False,                    help='omit plot')
-parser.add_argument('-S', '--save-plot',        dest="saveplot", action='store_true', required=False,                    help='save plot automatically')
-parser.add_argument('-T', '--truncate',         dest="length",   action='store',      required=False, type=argIsNatural, help='truncate input data for testing purposes')
-parser.add_argument('-v', '--verbose',          dest="verbose",  action='store_true', required=False,                    help='show additional information')
-parser.add_argument('-D', '--show-df',          dest="showdf",   action='store_true', required=False,                    help='show loaded dataframes')
-parser.add_argument('csv',                      type=str,        action="store",                                         help='participant CSV file')
+parser.add_argument('-V', '--version',                             action='version',                    version='%(prog)s ' + ' : ' + versionStr)
+parser.add_argument('-t', '--title',            dest="title",      action='store',      required=False,                    help='specify plot title')
+parser.add_argument('-n', '--numbered-title',   dest="number",     action='store',      required=False, type=argIsNatural, help='use custom numbered plot title')
+parser.add_argument('-l', '--nominal-duration', dest="duration",   action='store',      required=False, type=argIsNatural, help='set nominal meeting duration in minutes')
+parser.add_argument('-c', '--cutoff',           dest="cutoff",     action='store',      required=False, type=argIsNatural, help='set short session threshold in minutes')
+parser.add_argument('-I', '--ignore-gaps',      dest="ignoregaps", action='store_true', required=False,                    help='consider only beginning and closing timestamps')
+parser.add_argument('-N', '--dedup-name',       dest="usename",    action='store_true', required=False,                    help='deduplicate on name not email address')
+parser.add_argument('-d', '--dat-file',         dest="dat",        action='store_true', required=False,                    help='create or overwrite existing DAT file')
+parser.add_argument('-P', '--no-plot',          dest="noplot",     action='store_true', required=False,                    help='omit plot')
+parser.add_argument('-S', '--save-plot',        dest="saveplot",   action='store_true', required=False,                    help='save plot automatically (system dependent)')
+parser.add_argument('-T', '--truncate',         dest="length",     action='store',      required=False, type=argIsNatural, help='truncate input data for testing purposes')
+parser.add_argument('-v', '--verbose',          dest="verbose",    action='store_true', required=False,                    help='show additional information')
+parser.add_argument('-D', '--show-df',          dest="showdf",     action='store_true', required=False,                    help='show loaded dataframes')
+parser.add_argument('csv',                      type=str,          action="store",                                         help='participant CSV file from Zoom')
 
 args = parser.parse_args()
 
@@ -149,6 +174,7 @@ createDatFile = args.dat
 omitPlot = args.noplot
 savePlotAlso = args.saveplot
 csvTarget = args.csv
+ignoreGaps = args.ignoregaps
 
 # -------------------------------------
 #  report()
@@ -168,7 +194,7 @@ def report(funcname='', key='', value=''):
     if   value:    msg = '{0:<22s} : {1:<16s} : {2:s}'.format(funcname, key, value)
     elif key:      msg = '{0:<22s} : {1:s}'.format(funcname, key)
     elif funcname: msg = '{0:s}'.format(funcname)
-    else:          msg = ''                   # effectively insert a blank line
+    else:          msg = ''                       # effectively insert a blank line
     print(msg)
 
 def deport(funcname='', key='', value=''):        # wrapper to 'report'
@@ -197,11 +223,15 @@ def setPandasWide():                              # allow full terminal output
     deport("pandas reporting width", pandaswidth)
 
 def sayDf(df, stub, rows=5):                      # short report on given dataframe
-    if not args.showdf:
-        return
     info = "{0} = {1:d} x {2:d}".format(stub, df.shape[0], df.shape[1])
     report()
     report(info)
+    cols = list(df.columns)
+    colstr = "| " + ' | '.join(cols) + " |"
+    report()
+    report(colstr)
+    if not args.showdf:
+        return
     print()
     if rows == 0: print(df)
     else        : print(df.head(rows))
@@ -281,7 +311,7 @@ def createSecondDf(df, mainkey):                  # create recipient dataframe a
 # loop original dataframe and ratchet up cumulative minutes in recipient dataframe
 # iterating over dataframes is not good practice but it will do for now
 
-def stockSecondDf(df, df2, mainkey):                                  # load recipient dataframe and return same
+def stockSecondDfIgnoreGaps(df, df2, mainkey):                        # load recipient dataframe and return same
     # stocking code
     deport()
     deport("stocking loop")
@@ -316,6 +346,51 @@ def stockSecondDf(df, df2, mainkey):                                  # load rec
         df2.iat[index2, colindex2delta] = minutes                     # integer-valued
 
     df2 = df2.sort_values(by=['Delta'])                               # sort
+    return df2
+
+def stockSecondDfConsiderGaps(df, df2, mainkey):                      # load recipient dataframe and return same
+    # column names:  df  : | Email | Join | Leaf | Minutes |          # minutes from original Zoom data
+    # column names : df2 : | Email | Join | Leaf | Delta |
+    # stocking code
+    deport()
+    deport("stocking loop")
+    # prepare df
+    df3 = df.sort_values(by=['Join'])                                 # CAUTION: sort is essential
+    # prepare df2
+    epochstart = pandas.to_datetime(0, unit='s').tz_localize('UTC')   # 1970-01-01 00:00:00+00:00
+    epochstart = pandas.to_datetime(0, unit='s')                      # 1970-01-01 CAUTION: TZ-naive necessary for later comparisons
+    zeroduration = datetime.timedelta(0.0)                            # duration of zero
+    report("epochstart", epochstart)
+    df2['Playhead'] = epochstart                                      # df2 now with column name | Playhead |
+    colindex2join = df2.columns.get_loc('Join')                       # returns zero-based index
+    colindex2leaf = df2.columns.get_loc('Leaf')                       # leave time
+    colindex2delt = df2.columns.get_loc('Delta')                      # class 'numpy.int64'
+    colindex2head = df2.columns.get_loc('Playhead')
+    for index, row in df3.iterrows():                                  # not deduplicated
+        # get original data
+        value = row[mainkey]
+        join = row['Join']
+        leaf = row['Leaf']
+        zoommins = row['Minutes']
+        # get current recipient data
+        rowindex2 = df2.index[df2[mainkey] == value].tolist()[0]      # list never more than one item
+        currenthead = df2.iat[rowindex2, colindex2head]               # get current playhead
+        currentdelt = df2.iat[rowindex2, colindex2delt]               # get current delta
+        # process this data / next three lines  determine how current and previous durations interact
+        if   currenthead > leaf: duration = zeroduration              # set to zero
+        elif currenthead > join: duration = leaf - currenthead
+        else:                    duration = leaf - join
+        minutes = duration.total_seconds() / 60.0                     # class 'float'
+        # update recipient data
+        df2.iat[rowindex2, colindex2head] = leaf                      # move playhead
+        df2.iat[rowindex2, colindex2delt] += minutes                  # bump existing, integer valued
+        # debug reporting / negative durations should never exist
+        minstr = '{0:+0.2f}'.format(minutes)
+        msg = 'minutes = {0:>7s} | zoom minutes ={1:4d} | join = {2} | leaf = {3} | head = {4} | key = {5}'.format(minstr, zoommins, join, leaf, currenthead, value)
+        if minutes < 0.0:
+            report("negative duration", msg)
+
+    df2 = df2.sort_values(by=['Delta'])                               # sort on final duration
     return df2
 
 def extractCol(df, fieldname, cutoff):                                # extract a column and return as list
@@ -450,7 +525,12 @@ report("deduplication key", "'" + participantKey + "'")
 
 if givenCutoff: cutoff = givenCutoff
 else:           cutoff = cutoffDefault            # revert to default
-report ("cutoff minutes", cutoff)
+report("cutoff minutes", cutoff)
+
+# report again
+
+if ignoreGaps: report("gap treatment", "simple difference between first appearance and final departure")
+else:          report("gap treatment", "consider gaps and overlaps in attendance")
 
 # check CSV file exists and is readable
 
@@ -474,12 +554,13 @@ if args.length:
 
 # create recipient dataframe and report
 
-df2 = createSecondDf(df, participantKey)
+df2 = createSecondDf(df, participantKey)          # 'participantKey' either 'Name' or 'Email'
 sayDf(df2, "deduplicated dataframe")
 
 # stock recipient dataframe and report
 
-df2 = stockSecondDf(df, df2, participantKey)
+if ignoreGaps: df2 = stockSecondDfIgnoreGaps(df, df2, participantKey)
+else:          df2 = stockSecondDfConsiderGaps(df, df2, participantKey)
 sayDf(df2, "ratcheted dataframe", 0)              # zero is print entire dataframe
 
 # extract column and report
