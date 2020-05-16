@@ -1,5 +1,5 @@
 
-<!-- Time-stamp: <2020-04-21 09:46:56>                                      -->
+<!-- Time-stamp: <2020-05-16 07:50:35>                                      -->
 <!-- Purpose   : zoompart.py readme                                         -->
 <!-- Author    : Robbie Morrison <robbie.morrison@posteo.de>                -->
 <!-- Project   : zoomcsv                                                    -->
@@ -11,17 +11,19 @@
 
 # zoompart.py
 
-Plot Zoom video‑meeting participant duration data.
+Plot Zoom video‑meeting participant duration information.
 
 ### Overview
 
 This one file utility takes the participant CSV file, processes it a little, and produces a bar graph showing the participation rates.  In particular:
 
-- the utility deduplicates multiple sessions by the same user to produce a single session &mdash; multiple sessions will overlap if users inadvertently run simultaneous instances of Zoom and these overlaps are duly removed
-- a session is defined by its first join and last leave timestamps &mdash; so that any holes present will remain unaccounted
-- deduplication examines email addresses by default or optionally user names &mdash; users often enter slightly different names between sessions and are therefore less reliable in this regard
+- the utility deduplicates multiple sessions by the same user to produce a single session
+- the gaps and overlaps in multiple sessions are accounted for by default
+- deduplication examines email addresses by default or optionally user names &mdash; users often enter slightly different names between sessions and names are therefore less reliable in this regard
 - the utility tallies the number of sessions above a certain user‑defined time threshold to report the number of engaged users
 - the widely disliked "Attentiveness Score" metric is no longer present in the participant CSV file by default and is therefore not considered
+
+Multiple sessions by the same user are quite common and often overlap.
 
 ### Getting started
 
@@ -64,22 +66,22 @@ The software license is [ISC](https://spdx.org/licenses/ISC.html), regarded as e
 
 The following options are provided:
 
-| long                 | short | argument | comment                                  |
-|----------------------|------:|---------:|------------------------------------------|
-| `--version`          |  `-V` |  &mdash; | show utility version string and exit     |
-| `--help`             |  `-h` |  &mdash; | show  help message and exit              |
-| `--title`            |  `-t` |   string | set plot title                           |
-| `--numbered-title`   |  `-n` |  &#8469; | use custom numbered plot title           |
-| `--nominal-duration` |  `-l` |  &#8469; | set nominal duration in minutes          |
-| `--cutoff`           |  `-c` |  &#8469; | set short session threshold in minutes   |
-| `--dedup-name`       |  `-N` |  &mdash; | deduplicate on name not email address    |
-| `--dat-file`         |  `-d` |  &mdash; | create or overwrite existing DAT file    |
-| `--no-plot`          |  `-P` |  &mdash; | omit plot                                |
-| `--save-plot`        |  `-S` |  &mdash; | save plot automatically                  |
-| `--truncate`         |  `-T` |  &#8469; | truncate input data for testing purposes |
-| `--verbose`          |  `-v` |  &mdash; | print additional information             |
-| `--show-df`          |  `-D` |  &mdash; | print loaded dataframes                  |
-|                      |       |          |                                          |
+| long                 | short | argument | comment                                        |
+|----------------------|------:|---------:|------------------------------------------------|
+| `--version`          |  `-V` |  &mdash; | show utility version string and exit           |
+| `--help`             |  `-h` |  &mdash; | show help message and exit                     |
+| `--title`            |  `-t` |   string | specify plot title                             |
+| `--numbered-title`   |  `-n` |  &#8469; | use custom numbered plot title                 |
+| `--nominal-duration` |  `-l` |  &#8469; | set nominal meeting duration in minutes        |
+| `--cutoff`           |  `-c` |  &#8469; | set short session threshold in minutes         |
+| `--ignore-gaps`      |  `-I` |  &mdash; | consider only beginning and closing timestamps |
+| `--dedup-name`       |  `-N` |  &mdash; | deduplicate on name not email address          |
+| `--dat-file`         |  `-d` |  &mdash; | create or overwrite existing DAT file          |
+| `--no-plot`          |  `-P` |  &mdash; | omit plot                                      |
+| `--save-plot`        |  `-S` |  &mdash; | save plot automatically (system dependent)     |
+| `--truncate`         |  `-T` |  &#8469; | truncate input data for testing purposes       |
+| `--verbose`          |  `-v` |  &mdash; | show additional information                    |
+| `--show-df`          |  `-D` |  &mdash; | show loaded dataframes                         |
 
 &#8469; indicates {0, 1, 2, ...}.
 
