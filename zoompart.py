@@ -95,6 +95,10 @@ epilog = """
 The utility plots duration information from the participant CSV file produced at
 the end of a Zoom session.
 
+Around May 2020 the CSV file no longer contained two lines of meeting data.
+The script tries to import that data in a try block and fails gracefully if
+it is absent.
+
 Zoom is a proprietary video-conferencing application.  CSV indicates a
 comma-separated values file.
 
@@ -275,8 +279,7 @@ def sayMeta(df):
 # CSV columns : | Name (Original Name) | User Email | Join Time | Leave Time | Duration (Minutes) | Attentiveness Score |
 # date parsing example: 03/26/2020 02:23:34 PM -> 2020-03-26 14:23:34
 
-def readCsv(csvtarget):                           # read 'csvtarget' into a dataframe and return same
-    csvskip = 2                                   # skip first 2 lines describing the meeting
+def readCsv(csvtarget, csvskip=0):                # read 'csvtarget' into a dataframe and return same
     df = pandas.read_csv(csvtarget,
                          header=csvskip,
                          parse_dates=['Join Time', 'Leave Time'])
@@ -540,11 +543,22 @@ if not checkFile(csvTarget):
 
 # read in CSV file and report
 
-meta = readMeta(csvTarget)
-sayDf(meta, "meta dataframe")
-sayMeta(meta)
+try:
+    meta = readMeta(csvTarget)
+except ValueError as e:
+    report ("readMeta catch", e)
+    report("caution", "CSV file does not contain meeting information")
+    csvskip = 0                                   # nothing to skip in CSV file
+except BaseException as e:
+    report("readMeta catch", e)
+    report("caution", "unexpected error")
+    csvskip = 0                                   # nothing to skip in CSV file
+else:
+    sayDf(meta, "meta dataframe")
+    sayMeta(meta)
+    csvskip = 2                                   # skip first 2 lines describing the meeting
 
-df = readCsv(csvTarget)
+df = readCsv(csvTarget, csvskip)
 sayDf(df, "original dataframe")
 
 # truncate for development purposes as required
